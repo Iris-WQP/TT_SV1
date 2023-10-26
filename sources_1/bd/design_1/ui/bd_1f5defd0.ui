@@ -1,0 +1,26 @@
+{
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 6.8.11  2018-08-07 bk=1.4403 VDI=40 GEI=35 GUI=JA:9.0 non-TLS
+#  -string -flagsOSRD
+preplace inst rst_ps7_0_50M -pg 1 -lvl 2 -y 190 -defaultsOSRD
+preplace inst axi_bram_ctrl_0_bram -pg 1 -lvl 2 -y -240 -defaultsOSRD
+preplace inst axi_smc -pg 1 -lvl 3 -y 90 -defaultsOSRD
+preplace inst lmb_bram_if_cntlr_0_bram -pg 1 -lvl 3 -y -100 -defaultsOSRD
+preplace inst lmb_bram_if_cntlr_0 -pg 1 -lvl 2 -y -100 -defaultsOSRD
+preplace inst axi_bram_ctrl_0 -pg 1 -lvl 1 -y -230 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 1 -y 70 -defaultsOSRD
+preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 1 1 440J
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 2 NJ 70 NJ
+preplace netloc axi_bram_ctrl_0_BRAM_PORTB 1 1 1 440
+preplace netloc axi_smc_M00_AXI 1 0 4 20 -30 440J -20 NJ -20 1100
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 1 1 450
+preplace netloc lmb_bram_if_cntlr_0_BRAM_PORT 1 2 1 NJ
+preplace netloc rst_ps7_0_50M_peripheral_aresetn 1 0 3 40 180 460J 90 810
+preplace netloc Net 1 0 3 30 170 440 80 820
+levelinfo -pg 1 0 240 640 960 1120 -top -310 -bot 290
+"
+}
+{
+   "da_axi4_cnt":"1",
+   "da_bram_cntlr_cnt":"3"
+}
