@@ -30,7 +30,7 @@ module MEM_transpose#
 )(
     input clk,
     input rst_n,
-//    input rank_mode, ��slice of r���
+//    input rank_mode, slice of r
     input [log2_DEPTH-1:0] num_of_dat,
     input [`log_b-1:0] block_x,
     input [`log_b-1:0] block_y,

@@ -29,45 +29,69 @@ module ttsv_top#
 )                               // 16*8 = 128
 (
     input clk,
-	input rst_n,
-    //Master AXI write addr  д����
-    output [M_AXI_ID_WIDTH-1 : 0]M_AXI_AWID,//д��ַID���ڱ�ʶд��ַ��
+	  input rst_n,
+
+    //AXI lite for CSR
+    input S_AXI_AWVALID,
+    output S_AXI_AWREADY,
+    input [`log2CSR_REG_NUM+2-1:0]S_AXI_AWADDR,
+    input [2:0]S_AXI_AWPROT,//ignore
+    input [31:0]S_AXI_WDATA,//AXI写数据通道
+    input S_AXI_WVALID,
+    output S_AXI_WREADY,
+    input [3:0]S_AXI_WSTRB,//ignore
+    output [1:0]S_AXI_BRESP,//=2'b0
+    output S_AXI_BVALID,
+    input S_AXI_BREADY,
+    input S_AXI_ARVALID,
+    output S_AXI_ARREADY,
+    input [`log2CSR_REG_NUM+2-1:0]S_AXI_ARADDR,
+    input [2:0]S_AXI_ARPROT,//ignore
+    output [31:0]S_AXI_RDATA,
+    output [1:0]S_AXI_RRESP,//=2'b0
+    output S_AXI_RVALID,
+    input S_AXI_RREADY,
+
+
+    //Master AXI write addr channel
+    output [M_AXI_ID_WIDTH-1 : 0]M_AXI_AWID,// Master Interface Write Address ID
     output [32-1 : 0]M_AXI_AWADDR,// Master Interface Write Address
-    output [7 : 0]M_AXI_AWLEN, // Burst length�����ֵ256��Ŀǰ16
-    output [2 : 0]M_AXI_AWSIZE,//Burst type.((M_AXI_DATA_WIDTH/8)-1);
-    output [1 : 0]M_AXI_AWBURST,//��������type =2'b01;
-    output  M_AXI_AWLOCK,//Lock type.1'b0;
-    output [3 : 0]M_AXI_AWCACHE,//// Memory type.=4'b10
+    output [7 : 0]M_AXI_AWLEN, // Burst length ֵ256 16
+    output [2 : 0]M_AXI_AWSIZE,//size of one burst. ((M_AXI_DATA_WIDTH/8)-1);
+    output [1 : 0]M_AXI_AWBURST,//Burst type.2'b01;incrementing
+    output  M_AXI_AWLOCK,//Lock type.1'b0; Normal access
+    output [3 : 0]M_AXI_AWCACHE,//// Memory type.=4'b10; Non-cacheable bufferable
     output [2 : 0]M_AXI_AWPROT,//=3'h0;    // the transaction is a data access
-    output [3 : 0]M_AXI_AWQOS,//=4'h0;// Quality of Service
+    output [3 : 0]M_AXI_AWQOS,// // Quality of Service =4'h0; // no Quality of Service
     output M_AXI_AWVALID, //signaling valid write address
     input M_AXI_AWREADY,  // Write address ready.
-    //д����ͨ��
+    //Write Data Channel
     output [M_AXI_DATA_WIDTH-1 : 0]M_AXI_WDATA,
     output [M_AXI_DATA_WIDTH/8-1 : 0]M_AXI_WSTRB,
     output M_AXI_WLAST,
     output M_AXI_WVALID,
-    input M_AXI_WREADY,
-    //д��Ӧͨ����ignore��
+    input M_AXI_WREADY, //ignore
+    //Write Response Channel
     input [M_AXI_ID_WIDTH-1 : 0]M_AXI_BID,//ignore
     input [1 : 0] M_AXI_BRESP,//ignore
     input M_AXI_BVALID,//Bvalid and Bread means a a write response.
     output M_AXI_BREADY,//Bvalid and Bread means a a write response.
     
-    //������ͨ��
-    output [32-1 : 0]M_AXI_ARADDR,
-    output [7 : 0]M_AXI_ARLEN,
-    output [2 : 0]M_AXI_ARSIZE,//=clogb2((M_AXI_DATA_WIDTH/8)-1);
-    output [1 : 0]M_AXI_ARBURST,//=2'b01;
+    //Master AXI read addr channel
+    output [32-1 : 0]M_AXI_ARADDR,// Master Interface Read Address
+    output [7 : 0]M_AXI_ARLEN,//=8'd16;
+    output [2 : 0]M_AXI_ARSIZE,// 2; size of one burst. 32 or 64
+    //=clogb2((M_AXI_DATA_WIDTH/8)-1);
+    output [1 : 0]M_AXI_ARBURST,//Burst type.2'b01;incrementing
     output M_AXI_ARLOCK,//=1'b0;
-    output [3 : 0]M_AXI_ARCACHE,//=4'b10;
-    output [2 : 0]M_AXI_ARPROT,//=3'h0;
-    output [3 : 0]M_AXI_ARQOS,//=4'h0;
-    output M_AXI_ARVALID,
-    input M_AXI_ARREADY,
+    output [3 : 0]M_AXI_ARCACHE,//=4'b10; Non-cacheable bufferable
+    output [2 : 0]M_AXI_ARPROT,//=3'h0;   // the transaction is a data access
+    output [3 : 0]M_AXI_ARQOS,//=4'h0; // no Quality of Service
+    output M_AXI_ARVALID, // signaling valid read address
+    input M_AXI_ARREADY, // Read address ready.
     
-    //����Ӧͨ��
-    input [M_AXI_ID_WIDTH-1 : 0]M_AXI_RID,
+    // Read Data Channel
+    input [M_AXI_ID_WIDTH-1 : 0]M_AXI_RID, 
     input [M_AXI_DATA_WIDTH-1 : 0]M_AXI_RDATA,
     input [1 : 0]M_AXI_RRESP,//ignore
     input M_AXI_RLAST,
